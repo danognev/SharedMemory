@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/home/daniel/Рабочий стол/SharedMemory/build",
-  "command": "/usr/bin/g++ -g -o CMakeFiles/SharedMemory.dir/main.cpp.o -c \"/home/daniel/Рабочий стол/SharedMemory/main.cpp\"",
-  "file": "/home/daniel/Рабочий стол/SharedMemory/main.cpp"
-}
-]

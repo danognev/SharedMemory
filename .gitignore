@@ -3,8 +3,8 @@
 /out
 /build/CMakeFiles
 /build/.cmake
-/build/.ninja_deps
-/build/.ninja_log
+/build/*ninja*
 /build/cmake_install.cmake
 /build/CMakeCache.txt
 /build/compile_commands.json
+main
