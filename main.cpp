@@ -12,7 +12,7 @@ using namespace std;
 #define SM_SIZE 100
 #define SM_NAME "MY_MEMORY"
 
-enum eMenuVariants { Create = 1, Unlink, Exit };
+enum eMenuVariants { Create = 1, Read ,Unlink, Exit };
 
 void ShowMenu() noexcept;
 void UserChoice();
@@ -22,6 +22,8 @@ void WriteInSharedMemory(char*);
 void ReadSharedMemory();
 
 int main() {
+	cout << "Программа написана Огневым Даниилом" << endl 
+	<< "Задача программы: Создавать разделяемую память и производить запись/чтение из разных процессов" << endl;
 	ShowMenu();
 	UserChoice();
 	return 0;
@@ -43,7 +45,7 @@ void Process() {
 		address = CreateSharedMemory(shm);
 		if(address == (char*)(-1))
 			return;
-		cout << "PID: " << getpid() << " | MMAP: [" << (void*)address << " " << (void*)(address+ SM_SIZE) << "]" << endl;
+		cout << "PID: " << getpid() << " | Memory Allocation: [" << (void*)address << " " << (void*)(address+ SM_SIZE) << "]" << endl;
 		WriteInSharedMemory(address);
 		munmap(address,SM_SIZE);
     	close(shm);
@@ -52,19 +54,23 @@ void Process() {
 }
 void ReadSharedMemory() {
 	auto shm = shm_open(SM_NAME,O_RDONLY,0777);
-	auto address = (char*)mmap(0,SM_SIZE,PROT_READ,MAP_SHARED,shm,0);
+	auto address = (char*)mmap(0,SM_SIZE+1,PROT_READ,MAP_SHARED,shm,0);
 	if(shm == -1) {
 		perror("Произошла ошибка при чтении разделенной памяти!");
+		return;
 	}
-	cout << "PID: " << getpid() << " | Прочитано: " << address << endl;
+	cout << "PID: " << getpid() << " | Прочитано: " << address << " | [" << (void*)address << " " <<
+	(void*)(address + strlen(address)) << "]" << endl;
+	munmap(address,SM_SIZE+1);
+	close(shm);
 }
 void WriteInSharedMemory(char *address) {
-	char *text = new char[SM_SIZE];
+	char *text = new char[SM_SIZE+1];
 	cout << "Введите текст, который хотите внести в память. Не более: " << SM_SIZE << " символов!" << endl;
 	cin.clear();
 	cin.ignore(numeric_limits<streamsize>::max(), '\n');
-	cin.getline(text, SM_SIZE);
-	memcpy(address, text, SM_SIZE);
+	cin.getline(text, SM_SIZE+1);
+	memcpy(address, text, SM_SIZE+1);
 	cout << "PID: " << getpid() << " | Записано: " << text << endl;
 	delete[] text;
 }
@@ -75,11 +81,11 @@ char* CreateSharedMemory(int &shm) {
 		perror("Произошла ошибка при создании разделенной памяти!");
 		return (char*)(-1);
 	}
-	if(ftruncate(shm,SM_SIZE) == -1) {
+	if(ftruncate(shm,SM_SIZE+1) == -1) {
 		perror("При установлении размера произошла ошибка!");
 		return (char*)(-1);
 	}
-	address = (char*)mmap(0,SM_SIZE,PROT_WRITE|PROT_READ,MAP_SHARED,shm,0);
+	address = (char*)mmap(0,SM_SIZE+1,PROT_WRITE|PROT_READ,MAP_SHARED,shm,0);
 	if(address == (char*)(-1)) {
 		perror("Ошибка при разметке памяти!");
 		return (char*)(-1);
@@ -96,9 +102,21 @@ void UserChoice() {
 		switch(variant) {
 			case Create: {
 				Process();
+				ShowMenu();
+				UserChoice();
+				break;
+			}
+			case Read: {
+				ReadSharedMemory();
+				ShowMenu();
+				UserChoice();
 				break;
 			}
 			case Unlink: {
+				shm_unlink(SM_NAME);
+				cout << "Успешно удалено!" << endl;
+				ShowMenu();
+				UserChoice();
 				break;
 			}
 			case Exit: {
@@ -117,10 +135,9 @@ void UserChoice() {
 	}
 }
 
+
 void ShowMenu() noexcept {
-	cout << "Программа написана Огневым Даниилом" << endl 
-	<< "Задача программы: Создавать разделяемую память и производить запись/чтение из разных процессов" << endl;
-	cout << "\nЧто вы хотите сделать?" << endl 
+	cout << "\n\nЧто вы хотите сделать?" << endl 
 	<< "1. Создать разделяемую память и процесс, затем внести данные" << endl
 	<< "2. Прочитать содержимое разделенной памяти" << endl
 	<< "3. Очистить созданную память" << endl 

@@ -1,0 +1,3 @@
+/home/daniel/Рабочий стол/SharedMemory/build/CMakeFiles/SharedMemory.dir
+/home/daniel/Рабочий стол/SharedMemory/build/CMakeFiles/edit_cache.dir
+/home/daniel/Рабочий стол/SharedMemory/build/CMakeFiles/rebuild_cache.dir
