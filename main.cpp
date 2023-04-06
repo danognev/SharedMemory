@@ -1,5 +1,4 @@
 #include <iostream>
-#include <sys/types.h>
 #include <unistd.h>
 #include <sys/mman.h>
 #include <sys/wait.h>
@@ -113,8 +112,10 @@ void UserChoice() {
 				break;
 			}
 			case Unlink: {
-				shm_unlink(SM_NAME);
-				cout << "Успешно удалено!" << endl;
+				if(shm_unlink(SM_NAME) == -1)
+					perror("Возникла ошибка при удалении");
+				else
+					cout << "Успешно удалено!" << endl;
 				ShowMenu();
 				UserChoice();
 				break;
