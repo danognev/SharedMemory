@@ -1,3 +1,0 @@
-C:/Users/dan88/OneDrive/Desktop/SharedMemory/out/build/x64-Debug/CMakeFiles/SharedMemory.dir
-C:/Users/dan88/OneDrive/Desktop/SharedMemory/out/build/x64-Debug/CMakeFiles/edit_cache.dir
-C:/Users/dan88/OneDrive/Desktop/SharedMemory/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
