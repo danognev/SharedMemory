@@ -13,6 +13,7 @@
 
     static void IncorrectOptions();
 Метод вывода сообщения о вводе некорректных аргументов
+
     static void ShowHelp();
 Вывод справочной информации
 
