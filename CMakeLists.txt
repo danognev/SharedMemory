@@ -1,4 +1,8 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.08)
 
+set(CMAKE_CXX_STANDARD_REQUIRED 20)
 project(SharedMemory)
-add_executable(SharedMemory main.cpp)
+
+set(TARGET_HEADER msg.h memory_worker.h process.h)
+set(TARGET_SRC msg.cpp memory_worker.cpp process.cpp main.cpp)
+add_executable(SharedMemory ${TARGET_SRC} ${TARGET_HEADER})
